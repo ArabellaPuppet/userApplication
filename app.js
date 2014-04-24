@@ -2,6 +2,7 @@
 var express = require('express');
 var stylus = require('stylus');
 var nib = require('nib');
+var logger = require('morgan');
 
 //Set port number
 var portnumber = 3000;
@@ -10,6 +11,7 @@ var portnumber = 3000;
 var app = express();
 console.log("Express has been initialised");
 
+// Compile function - check this function online
 function compile(str, path){
 	return stylus('str')
 	.set('filename', path)
@@ -17,24 +19,23 @@ function compile(str, path){
 }
 
 // Set Views folder
-app.set('views', __dirname + '/views');
+app.set('views', __dirname + '/views'); //__dirname is the name of our directory
 
 // Initialise Jade
 app.set('view engine', 'jade');
 console.log('Jade has been initialised');
 
-// Stylus Middleware
-app.use(express.logger('dev'));
+// Stylus Middleware (functions that handles request)
+app.use(logger('dev')); //replaces your app.use(express.logger());
 app.use(stylus.middleware(
-	{
-	src: __dirname + 'public',
-	compile: compile
-	}
+  { src: __dirname + '/public'
+  , compile: compile
+  }
 ))
 
 app.use(express.static(__dirname + 'public'));
 
-// Render Index page
+// Render the Index page
 app.get('/', function(req, res){
 	res.render('index', 
 		{ title: "Welcome" }
