@@ -13,8 +13,8 @@ console.log("Express has been initialised");
 
 // Compile function - check this function online
 function compile(str, path){
-	return stylus('str')
-	.set('filename', path)
+	return stylus(str)
+	.set('compress', true)
 	.use(nib())
 }
 
@@ -27,13 +27,13 @@ console.log('Jade has been initialised');
 
 // Stylus Middleware (functions that handles request)
 app.use(logger('dev')); //replaces your app.use(express.logger());
-app.use(stylus.middleware(
-  { src: __dirname + '/public'
-  , compile: compile
-  }
-))
+app.use(stylus.middleware({ 
+	src: __dirname + '/stylus',
+	dest: __dirname + '/public',
+	compile: compile
+}))
 
-app.use(express.static(__dirname + 'public'));
+app.use('/static', express.static(__dirname + '/public/static'));
 
 // Render the Index page
 app.get('/', function(req, res){
