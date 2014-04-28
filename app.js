@@ -14,8 +14,10 @@ console.log("Express has been initialised");
 // Compile function - check this function online
 function compile(str, path){
 	return stylus(str)
+	.set('filename', path)
 	.set('compress', true)
 	.use(nib())
+	.import('nib');
 }
 
 // Set Views folder
@@ -33,7 +35,7 @@ app.use(stylus.middleware({
 	compile: compile
 }))
 
-app.use('/static', express.static(__dirname + '/public/static'));
+app.use(express.static(__dirname + '/public/'));
 
 // Render the Index page
 app.get('/', function(req, res){
