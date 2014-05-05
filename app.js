@@ -2,7 +2,15 @@
 var express = require('express');
 var stylus = require('stylus');
 var nib = require('nib');
-var logger = require('morgan');
+var morgan = require('morgan');
+var routes = require('./routes');
+var mongodb = require('mongodb');
+var monk = require('monk');
+var db = monk('localhost:27017/userApplication');
+var bodyParser = require('body-parser');
+var method_override = require('method-override');
+var cookie_parser = require('cookie-parser');
+var express_session = require('express-session');
 
 //Set port number
 var portnumber = 3000;
@@ -11,7 +19,7 @@ var portnumber = 3000;
 var app = express();
 console.log("Express has been initialised");
 
-// Compile function - check this function online
+// Compile function
 function compile(str, path){
 	return stylus(str)
 	.set('filename', path)
@@ -27,8 +35,14 @@ app.set('views', __dirname + '/views'); //__dirname is the name of our directory
 app.set('view engine', 'jade');
 console.log('Jade has been initialised');
 
-// Stylus Middleware (functions that handles request)
-app.use(logger('dev')); //replaces your app.use(express.logger());
+// Stylus Middleware
+app.use(morgan('dev')); //replaces your app.use(express.logger());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded());
+app.use(method_override());
+app.use(cookie_parser('mykey'));
+app.use(express_session());
+//app.use(app.router);
 app.use(stylus.middleware({ 
 	src: __dirname + '/stylus',
 	dest: __dirname + '/public',
@@ -37,12 +51,10 @@ app.use(stylus.middleware({
 
 app.use(express.static(__dirname + '/public/'));
 
-// Render the Index page
-app.get('/', function(req, res){
-	res.render('index', 
-		{ title: "Welcome" }
-	);
-})
+// Render the routes views
+app.get('/', routes.index);
+app.get('/userlist', routes.userlist(db));
+app.get('/adduser', routes.adduser(db));
 
 app.listen(portnumber);
 

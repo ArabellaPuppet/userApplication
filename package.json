@@ -9,7 +9,13 @@
   "dependencies": {
 	"express": "*",
 	"jade": "*",
-	"nib": "*"
+	"nib": "*",
+	"mongodb":"*",
+	"monk":"*",
+	"body-parser":"*",
+	"method-override":"*",
+	"cookie-parser":"*",
+	"express-session":"*"
   },
   "repository": {
     "type": "git",
