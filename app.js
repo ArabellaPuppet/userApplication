@@ -4,6 +4,7 @@ var stylus = require('stylus');
 var nib = require('nib');
 var morgan = require('morgan');
 var routes = require('./routes');
+//var user = require('./routes/user');
 var mongodb = require('mongodb');
 var monk = require('monk');
 var db = monk('localhost:27017/userApplication');
@@ -54,7 +55,7 @@ app.use(express.static(__dirname + '/public/'));
 // Render the routes views
 app.get('/', routes.index);
 app.get('/userlist', routes.userlist(db));
-app.get('/adduser', routes.adduser(db));
+app.post('/adduser', routes.adduser(db));
 
 app.listen(portnumber);
 
